@@ -1,0 +1,25 @@
+{% extends 'the_blog/padre.html' %}
+
+{% load static %}
+
+{% block titulo %}
+<h1 class="mb-5">{{page.titulo}}</h1>
+{% endblock %}
+
+{% block custom_content %}
+<div class="container px-lg-5 mb-5">
+    <div class="card p-2 p-lg-5 bg-light rounded-3">
+        <div class="m-4 m-lg-5">
+            <h2 class="display6 fw-bold text-center">{{page.subtitulo}}</h2>
+            <br>
+            <p class="fs-4 text-left">{{ page.cuerpo|safe }}</p>
+            <br>
+            <p class="display6 text-left">Autor: {{page.autor}}</p>
+            <p class="display6 text-left">Fecha: {{page.fecha}}</p>
+            <div class="m-4 m-lg-5 text-center">
+                <img src="" alt="image">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
