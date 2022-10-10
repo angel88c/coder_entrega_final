@@ -31,7 +31,41 @@ def delete_page(request, id):
 
 def edit_page(request, id):
     current_page = Page.objects.get(id=id)
-    print()
+    print('***')
+    print(current_page)
+    if request.method == 'POST':
+        form_page = PageForm(request.POST)
+        if form_page.is_valid:
+            print(form_page.is_valid())
+            info = form_page.cleaned_data
+            current_page.titulo = info['titulo']
+            print(info['titulo'])
+            current_page.subtitulo = info['subtitulo']
+            print(info['subtitulo'])
+            #current_page.cuerpo = info['cuerpo']
+            #print(info['cuerpo'])
+            current_page.autor = info['autor']
+            print(info['autor'])
+            current_page.fecha  = info['fecha']
+            print(info['fecha'])
+            #current_page.imagen = info['imagen']
+            #print(info['imagen'])
+
+            current_page.save()
+            pages = Page.objects.all()
+
+            return render(request, 'the_blog/pages.html', {'pages': pages})
+    else:
+        form_page = PageForm(initial={
+            'titulo': current_page.titulo,
+            'subtitulo': current_page.subtitulo,
+            'cuerpo': current_page.cuerpo,
+            'autor': current_page.autor,
+            'fecha': current_page.fecha,
+            'imagen': current_page.imagen
+        })
+
+        return render(request, 'the_blog/edit_page.html', {'formulario': form_page, 'page': current_page})
 
 def new_page(request):
     if request.method == 'POST':

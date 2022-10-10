@@ -30,8 +30,8 @@
                         <p class="mb-2">{{page.autor}}</p>
                         <p class="mb-2">{{page.fecha}}</p>
                         <div >
-                            <a class="btn btn-info mb-4" href="{% url 'edit_page' %}">Editar blog</a>
-                            <a class="btn btn-danger mb-4" href="{% url 'delete_page' %}">Eliminar blog</a>
+                            <a class="btn btn-info mb-4" href="{% url 'edit_page' page.id %}">Editar blog</a>
+                            <a class="btn btn-danger mb-4" href="{% url 'delete_page' page.id %}">Eliminar blog</a>
                         </div>
                     </div>
                 </div>

@@ -9,8 +9,8 @@ urlpatterns = [
     path('pages/',          pages,          name='pages'),
     path('page/<id>',       page,           name='page'),
     path('new_page/',       new_page,       name='new_page'),
-    #path('edit_page/',      edit_page,      name='edit_page'),
-    path('delete_page/',    delete_page,    name='delete_page'),
+    path('edit_page/<id>',      edit_page,      name='edit_page'),
+    path('delete_page/<id>',    delete_page,    name='delete_page'),
 
     ##Users
     #path('users/',           users,         name='users'),
