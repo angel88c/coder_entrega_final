@@ -1,0 +1,26 @@
+{% extends 'the_blog/padre.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block titulo %}
+<h1 class="mb-5">Iniciar Sesion.</h1>
+{% endblock %}
+
+{% block custom_content %}
+
+
+<div class="container px-5 my-5">
+    <div class="row justify-content-center align-self-center">
+        <div class="col-lg-5">
+            <div class="card border-0 rounded-3 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="alert alert-success m-2">Usuario deslogueado correctamente.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
