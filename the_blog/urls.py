@@ -17,5 +17,6 @@ urlpatterns = [
     path('login/',               login_request,    name='login'),
     path('register/',            register_request,    name='register'),
     path('logout/',              LogoutView.as_view(template_name="the_blog/logout.html"),    name='logout'),
-
+    path('edit_user/',           edit_user,      name='edit_user'),
+    path('create_avatar/',       create_avatar,      name='create_avatar'),
 ]

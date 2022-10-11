@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from .models import *
-from .forms import PageForm, UserSignupForm
+from .forms import PageForm, UserSignupForm, UserEditForm, AvatarForm
 
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import LogoutView
@@ -16,31 +16,33 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 @login_required
 def inicio(request):
-    return render(request, 'the_blog/index.html')
+    print('index')
+    print(get_avatar(request))
+    return render(request, 'the_blog/index.html', {'avatar': get_avatar(request)})
 
 @login_required
 def about(request):
-    return render(request, 'the_blog/about.html')
+    return render(request, 'the_blog/about.html', {'avatar': get_avatar(request)})
 
 @login_required
 def pages(request):
     pages = Page.objects.all()
     print(list(pages))
-    return render(request, 'the_blog/pages.html', {'pages': pages})
+    return render(request, 'the_blog/pages.html', {'pages': pages, 'avatar': get_avatar(request)})
 
 @login_required
 def page(request, id):
     page = Page.objects.get(id=id)
     print('***')
     print(page)
-    return render(request, 'the_blog/page.html', {'page': page})
+    return render(request, 'the_blog/page.html', {'page': page, 'avatar': get_avatar(request)})
 
 @login_required
 def delete_page(request, id):
     page_to_delete = Page.objects.get(id=id)
     page_to_delete.delete()
     pages = Page.objects.all()
-    return render(request, 'the_blog/pages.html', {'pages':pages})
+    return render(request, 'the_blog/pages.html', {'pages':pages, 'avatar': get_avatar(request)})
 
 @login_required
 def edit_page(request, id):
@@ -79,7 +81,7 @@ def edit_page(request, id):
             'imagen': current_page.imagen
         })
 
-        return render(request, 'the_blog/edit_page.html', {'formulario': form_page, 'page': current_page})
+        return render(request, 'the_blog/edit_page.html', {'formulario': form_page, 'page': current_page, 'avatar': get_avatar(request)})
 
 @login_required
 def new_page(request):
@@ -106,7 +108,7 @@ def new_page(request):
             return render(request, 'the_blog/pages.html', {'pages':pages})
     else:
         page_form = PageForm()
-        return render(request, 'the_blog/new_page.html', {'page_form':page_form})
+        return render(request, 'the_blog/new_page.html', {'page_form':page_form, 'avatar': get_avatar(request)})
 
 def login_request(request):
 
@@ -145,4 +147,63 @@ def register_request(request):
             return render (request, 'the_blog/register.html', {'formulario': form, 'mensaje':'Formulario invalido.'})
     else:
         form = UserSignupForm()
-        return render (request, 'the_blog/register.html', {'formulario': form})
+        return render (request, 'the_blog/register.html', {'formulario': form, })
+
+@login_required
+def edit_user(request):
+
+    #Obtengo el usuario que está logueado
+    usuario = request.user
+    if request.method == 'POST':
+        form = UserEditForm(request.POST)
+        print("The form is valid? " +str(form.is_valid()))
+        if form.is_valid():
+            info = form.cleaned_data
+            print(info)
+            usuario.email = info['email']
+            usuario.password1=info['password1']
+            usuario.password2=info['password2']
+            usuario.name=info['name']
+            usuario.last_name=info['last_name']
+            usuario.save()
+
+            return render(request, 'the_blog/index.html', {'mensaje':'Usuario modificado correctamente.'})
+        else:
+            return render(request, 'the_blog/edit_user.html', {'mensaje':'Formulario invalido.'})
+    else:
+        form = UserEditForm(instance=usuario)
+
+        return render(request, 'the_blog/edit_user.html', {'formulario':form, 'usuario':usuario, 'avatar': get_avatar(request)})
+
+@login_required
+def create_avatar(request):
+    usuario = request.user
+
+    if request.method == 'POST':
+        form = AvatarForm(request.POST, request.FILES)
+        if form.is_valid():
+
+            old_avatar = Avatar.objects.filter(user=request.user)
+
+            if len(old_avatar) > 0:
+                old_avatar[0].delete()
+
+            avatar = Avatar(user=usuario, imagen=form.cleaned_data['imagen'])
+            avatar.save()
+            return render(request, 'the_blog/index.html', {'usuario': usuario, 'mensaje':'Avatar Agregado exitosamente', 'imagen':avatar.imagen.url})
+        else:
+            return render(request, 'the_blog/create_avatar.html', {'formulario':form, 'mensaje': 'Formulario Invalido.'})
+    else:
+        form = AvatarForm()
+        return render(request, 'the_blog/create_avatar.html', {'formulario':form, 'usuario':usuario, 'avatar': get_avatar(request)})
+
+def get_avatar(request):
+    avatar_list = Avatar.objects.filter(user=request.user)
+    print(avatar_list)
+    if len(avatar_list) > 0:
+        avatar_image = avatar_list[0].imagen.url
+    else:
+        avatar_image = '/media/avatares/default_avatar/default.png'
+
+    print(avatar_image)
+    return avatar_image
