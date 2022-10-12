@@ -1,30 +1,68 @@
-### Readme
-Integrantes:
+# Readme.md
 
-Angel Carreón
+# Integrantes
 
-Actividades
+### Arely Torres
 
--Creacion de modelos de Usuario y Blog
+### Angel Carreon
 
--CRUD de Blog.
+## Uso de la app
 
--Estructura de las plantillas de HTML.
+La aplicacion se llama **the_blog**, cuando se ejecuta 
 
--Creacion de formularios e integracion con CKEditor
+```bash
+python manage.py runserver
+```
+Se entra mediante [http://127.0.0.1:8000/the_blog/]()
 
--Estilización de las vistas HTML mediante crisp
+### Rutas
+```python
+urlpatterns = [
+    path('',                inicio,         name='inicio'),
+    path('about/',          about,          name='about'),
 
--Creación de modelos de AVATARES
+    #Blog's pages
+    path('pages/',              pages,          name='pages'),
+    path('page/<id>',           page,           name='page'),
+    path('new_page/',           new_page,       name='new_page'),
+    path('edit_page/<id>',      edit_page,      name='edit_page'),
+    path('delete_page/<id>',    delete_page,    name='delete_page'),
 
--Creacion de Login, Logout y Registro
+    path('login/',               login_request,    name='login'),
+    path('register/',            register_request,    name='register'),
+    path('logout/',              LogoutView.as_view(template_name="the_blog/logout.html"),    name='logout'),
+    path('edit_user/',           edit_user,      name='edit_user'),
+    path('create_avatar/',       create_avatar,      name='create_avatar'),
+]
+```
+
+
+## Cuentas de usuario para iniciar sesion.
+
+```bash
+user: admin
+pass: programacion2
+
+user: admin2
+pass: programacion3
+
+user: c_angel
+pass: anGel88c*
+```
 
 
 
-Arely Torres
+## Actividades
+### Angel Carreon
+- Creacion de modelos de Usuario y Blog
+- CRUD de Blog.
+- Estructura de las plantillas de HTML.
+- Creacion de formularios e integracion con CKEditor
+- Estilización de las vistas HTML mediante crisp
+- Creación de modelos de AVATARES
+- Creacion de Login, Logout y Registro
 
-Actividades
-
--Definir Estructura de archivos
-
--Seleccion e integración de plantillas
+### Arely Torres
+- Creacion del proyecto inicial
+- Definir Estructura de archivos
+- Seleccion e integración de plantillas
