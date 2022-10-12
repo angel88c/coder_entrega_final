@@ -1,5 +1,6 @@
 {% extends 'the_blog/padre.html' %}
 
+{% load crispy_forms_tags  %}
 {% load static %}
 
 {% block titulo %}
@@ -7,10 +8,37 @@
 {% endblock %}
 
 {% block custom_content %}
-<form action="{% url 'edit_page' page.id %}" method="POST"> {% csrf_token %}
+
+<div class="container px-5 my-5">
+    <div class="row justify-content-center align-self-center">
+        <div class="col-lg-10">
+            <div class="card border-0 rounded-3 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <div class="h3 fw-light">Editar Blog.</div>
+                    </div>
+                    <form action="{% url 'edit_page' page.id %}" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <table class="table">
+                            {{ formulario.media}}
+                            {{ formulario |crispy }}
+                        </table>
+                        <div>
+                            <input class="btn btn-primary" type="submit" value="Actualizar">
+                        </div>
+                    </form>
+                </div>
+                {% if mensaje %}
+                <div class="alert alert-danger m-2">{{ mensaje }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% comment %} <form action="{% url 'edit_page' page.id %}" method="POST"> {% csrf_token %}
     <table>
         {{ formulario.as_table }}
     </table>
     <input class="btn btn-primary" type="submit" value="Update">
-</form>
+</form> {% endcomment %}
 {% endblock %}

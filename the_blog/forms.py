@@ -1,6 +1,7 @@
 from django import forms
 from ckeditor.fields import RichTextField
 from ckeditor.widgets import CKEditorWidget
+from django.forms import SelectDateWidget
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -9,8 +10,8 @@ class PageForm(forms.Form):
     subtitulo = forms.CharField(max_length = 50)
     cuerpo =    forms.CharField(widget = CKEditorWidget())
     autor =     forms.CharField(max_length = 50)
-    fecha =     forms.DateField()
-    imagen =    forms.ImageField()
+    fecha =     forms.DateField(widget=SelectDateWidget())
+    imagen =    forms.ImageField(label="Imagen")
 
 class UserSignupForm(UserCreationForm):
     email = forms.EmailField()

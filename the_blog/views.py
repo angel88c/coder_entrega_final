@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 from tkinter import image_names
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -47,24 +47,26 @@ def delete_page(request, id):
 @login_required
 def edit_page(request, id):
     current_page = Page.objects.get(id=id)
-    print('***')
+    print('*****')
     print(current_page)
+    print(request.method)
     if request.method == 'POST':
+        print('dentro del if')
         form_page = PageForm(request.POST)
-        if form_page.is_valid:
-            print(form_page.is_valid())
+        print(f'*****{form_page.is_valid()}*****')
+        if form_page.is_valid():
             info = form_page.cleaned_data
             current_page.titulo = info['titulo']
             print(info['titulo'])
             current_page.subtitulo = info['subtitulo']
             print(info['subtitulo'])
-            #current_page.cuerpo = info['cuerpo']
-            #print(info['cuerpo'])
+            current_page.cuerpo = info['cuerpo']
+            print(info['cuerpo'])
             current_page.autor = info['autor']
             print(info['autor'])
             current_page.fecha  = info['fecha']
             print(info['fecha'])
-            #current_page.imagen = info['imagen']
+            current_page.imagen = info['imagen']
             #print(info['imagen'])
 
             current_page.save()
@@ -78,7 +80,7 @@ def edit_page(request, id):
             'cuerpo': current_page.cuerpo,
             'autor': current_page.autor,
             'fecha': current_page.fecha,
-            'imagen': current_page.imagen
+            'imagen': current_page.imagen.url
         })
 
         return render(request, 'the_blog/edit_page.html', {'formulario': form_page, 'page': current_page, 'avatar': get_avatar(request)})
@@ -86,15 +88,17 @@ def edit_page(request, id):
 @login_required
 def new_page(request):
     if request.method == 'POST':
-        form = PageForm(request.POST)
-        if form.is_valid:
+        form = PageForm(request.POST, request.FILES)
+        print(form)
+        print(f'**{form.is_valid()}**')
+        if form.is_valid():
             page_info = form.cleaned_data
             print(page_info)
             titulo    = page_info['titulo']
             subtitulo = page_info['subtitulo']
             cuerpo    = page_info['cuerpo']
             autor     = page_info['autor']
-            fecha     = datetime.now()
+            fecha     = page_info['fecha']
             imagen    = page_info['imagen']
 
             page = Page(titulo=titulo,
@@ -106,6 +110,8 @@ def new_page(request):
             page.save()
             pages = Page.objects.all()
             return render(request, 'the_blog/pages.html', {'pages':pages})
+        else:
+            return render(request, 'the_blog/new_page.html', {'formulario':form, 'mensaje': 'Formulario Invalido.'})
     else:
         page_form = PageForm()
         return render(request, 'the_blog/new_page.html', {'page_form':page_form, 'avatar': get_avatar(request)})
